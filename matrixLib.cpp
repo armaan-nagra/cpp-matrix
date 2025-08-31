@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <vector>
+#include <iostream>
 
 class Matrix{
 public:
@@ -14,7 +15,30 @@ public:
         return data_[row * cols_ + col];
     }
 
+    
+
 private: 
     size_t rows_, cols_;
     std::vector<double> data_;
 };
+
+
+int main(){
+    Matrix A(2,3);
+
+    A(0,0) = 1.0;
+    A(0,1) = 2.0;
+    A(0,2) = 3.0;
+    A(1,0) = 4.0;
+    A(1,1) = 5.0;
+    A(1,2) = 6.0;
+
+
+    for (size_t i = 0; i < 2; ++i){
+        for (size_t j = 0; j < 3; j++){
+            std::cout << A(i,j) << (j + 1 < 3 ? ' ' : '\n');
+        }
+    }
+}
+
+
