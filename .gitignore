@@ -1,0 +1,18 @@
+# Ignore build directory
+build/
+
+# Ignore executables
+MatrixLib
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore editor/IDE specific files
+.vscode/
+.idea/
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
