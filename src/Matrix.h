@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <vector>
 #include <stdexcept>
+#include <thread>
+#include <future>
 
 class Matrix{
 public:
@@ -21,6 +23,8 @@ public:
     Matrix operator-(const Matrix& other) const;
 
     Matrix operator*(const Matrix& other) const;
+
+    Matrix parallelMultiply(const Matrix& other, size_t num_threads) const;
 
 private: 
     size_t rows_, cols_;

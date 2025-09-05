@@ -2,33 +2,50 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <chrono>
+#include "src/Matrix.h"
 
-class Matrix{
-public:
-    Matrix(size_t rows, size_t cols);
+void benchmark() {
+    const size_t size = 1000; // Increased size for large matrices
+    Matrix A(size, size);
+    Matrix B(size, size);
 
-    double & operator()(size_t row, size_t col);
+    for (size_t i = 0; i < size; ++i) {
+        for (size_t j = 0; j < size; ++j) {
+            A(i, j) = static_cast<double>(i + j);
+            B(i, j) = static_cast<double>(i - j);
+        }
+    }
 
-    const double & operator()(size_t row, size_t col) const;
+    // Benchmark normal multiplication
+    auto start = std::chrono::high_resolution_clock::now();
+    Matrix C = A * B;
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Normal multiplication took " << duration.count() << " seconds." << std::endl;
 
-    size_t rows() const;
-    size_t cols() const;
+    // Benchmark threaded multiplication
+    size_t default_threads = std::thread::hardware_concurrency();
+    start = std::chrono::high_resolution_clock::now();
+    Matrix D = A.parallelMultiply(B, default_threads);
+    end = std::chrono::high_resolution_clock::now();
+    duration = end - start;
+    std::cout << "Threaded multiplication with " << default_threads << " threads took " << duration.count() << " seconds." << std::endl;
 
-    Matrix operator+(const Matrix& other) const;
-
-    Matrix operator-(const Matrix& other) const;
-
-    Matrix operator*(const Matrix& other) const;
-
-private: 
-    size_t rows_, cols_;
-    std::vector<double> data_;
-};
-
-
-
+    // Vary the number of threads
+    size_t max_threads = std::thread::hardware_concurrency();
+    for (size_t num_threads = 1; num_threads <= max_threads; ++num_threads) {
+        std::cout << "Testing with " << num_threads << " threads." << std::endl;
+        start = std::chrono::high_resolution_clock::now();
+        Matrix E = A.parallelMultiply(B, num_threads);
+        end = std::chrono::high_resolution_clock::now();
+        duration = end - start;
+        std::cout << "Multiplication with " << num_threads << " threads took " << duration.count() << " seconds." << std::endl;
+    }
+}
 
 int main() {
+    benchmark();
     // Test 1: Addition
     Matrix A(2,3);
     A(0,0)=1; A(0,1)=2; A(0,2)=3;
