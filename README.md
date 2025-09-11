@@ -32,4 +32,3 @@ MatrixLib is a simple C++ library for performing basic matrix operations such as
 ## TODO
 
 - Implement compound assignment operators (+=, -=, *=) for the Matrix class.
-- Explore using threading to perform matrix multiplication steps concurrently for performance improvement.
